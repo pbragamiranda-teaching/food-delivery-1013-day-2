@@ -53,9 +53,4 @@ class MealRepository
     end
     @next_id = @meals.empty? ? 1 : @meals.last.id + 1
   end
-
 end
-
-# csv_file_path = File.join(File.dirname(__FILE__), "./meals.csv")
-
-# new_repo = MealRepository.new(csv_file_path)

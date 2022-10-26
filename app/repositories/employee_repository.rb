@@ -6,7 +6,17 @@ class EmployeeRepository
     @csv_file_path = csv_file_path
     @employees = []
     # reads the csv file and transform the data into Employee instances
-    load_csv
+    load_csv if File.exist?(@csv_file_path)
+  end
+
+  def all_riders
+    @employees.select do |employee|
+      employee.rider?
+    end
+  end
+
+  def find(id)
+    @employees.find { |employee| employee.id == id }
   end
 
   def find_by_username(username)

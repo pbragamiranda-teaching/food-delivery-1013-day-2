@@ -1,6 +1,7 @@
 class Router
-  def initialize(meals_controller, customers_controller, sessions_controller)
+  def initialize(meals_controller, customers_controller, sessions_controller, orders_controller)
     @meals_controller = meals_controller
+    @orders_controller = orders_controller
     @sessions_controller = sessions_controller
     @customers_controller = customers_controller
     @running = true
@@ -36,6 +37,8 @@ class Router
     puts "2. List all meals"
     puts "3. Add new customer"
     puts "4. List all customers"
+    puts "5. Add new order"
+    puts "6. List all undelivered orders"
     puts "7. Logout"
     puts "8. Exit"
     print "> "
@@ -45,12 +48,10 @@ class Router
     puts "--------------------------"
     puts "------- RIDER MENU -------"
     puts "--------------------------"
-    puts "1. Add new meal"
-    puts "2. List all meals"
-    puts "3. Add new customer"
-    puts "4. List all customers"
-    puts "7. Logout"
-    puts "8. Exit"
+    puts "1. List my undelivered orders"
+    puts "2. Mark order as delivered"
+    puts "3. Logout"
+    puts "4. Exit"
     print "> "
   end
 
@@ -60,23 +61,23 @@ class Router
     when 2 then @meals_controller.list
     when 3 then @customers_controller.add
     when 4 then @customers_controller.list
-    when 5 then puts "do manager stuff"
+    when 5 then @orders_controller.add
+    when 6 then @orders_controller.list_undelivered_orders
     when 7 then logout!
     when 8 then stop!
-    else puts "Try again..."
+    else
+      puts "Try again..."
     end
   end
 
   def route_rider_action(choice)
     case choice
-    when 1 then @meals_controller.add
-    when 2 then @meals_controller.list
-    when 3 then @customers_controller.add
-    when 4 then @customers_controller.list
-    when 5 then puts "do rider stuff"
-    when 7 then logout!
-    when 8 then stop!
-    else puts "Try again..."
+    when 1 then @orders_controller.list_my_orders(@current_user)
+    when 2 then @orders_controller.mark_as_delivered(@current_user)
+    when 3 then logout!
+    when 4 then stop!
+    else
+      puts "Try again..."
     end
   end
 
@@ -85,7 +86,7 @@ class Router
   end
 
   def stop!
-    @running = false
     logout!
+    @running = false
   end
 end
